@@ -1,5 +1,4 @@
 import xlsxwriter
-from parsNyaaSi import array
 
 
 def writer(parametr):
@@ -23,5 +22,3 @@ def writer(parametr):
         row+=1
 
     book.close()
-
-writer(array)
