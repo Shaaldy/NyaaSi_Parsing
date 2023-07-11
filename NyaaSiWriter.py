@@ -1,12 +1,22 @@
 import xlsxwriter
-
-
+from parsNyaaSi import array
 def writer(parametr):
-    book = xlsxwriter.Workbook("parsNyaaSi.xlsx")
+    book = xlsxwriter.Workbook("parsTest.xlsx")
     page = book.add_worksheet("Anime")
 
     row = 1
     coloumn = 0
+    page.write(0, coloumn, "Subers")
+    
+    page.write(0, coloumn + 1, "Name")
+    
+    page.write(0, coloumn + 2, "Episode")
+    
+    page.write(0, coloumn + 3, "Quality")
+    
+    page.write(0, coloumn + 4, "Torrent")
+
+
     page.set_column("A:A", 20)
     page.set_column("B:B", 20)
     page.set_column("C:C", 20)
@@ -22,3 +32,5 @@ def writer(parametr):
         row+=1
 
     book.close()
+
+writer(array)
