@@ -1,5 +1,6 @@
 import requests
 import re
+import datetime
 from bs4 import BeautifulSoup as BS
 from time import sleep
 
@@ -7,10 +8,22 @@ from time import sleep
 
 header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/99.0.0.0"}
 base_url = "https://nyaa.si"
-
-way = "D:\\Videos\\One Piece\\"
+way = "D:\\Videos\\One Piece"
 
 name = ["One Piece", "Horimiya", "Ayaka"]
+
+date_today = datetime.datetime.now()
+
+
+def delta_date(date):
+    datetime_format = "%Y-%m-%d %H:%M" 
+    datetime_obj = datetime.datetime.strptime(date, datetime_format)
+    delta = date_today - datetime_obj
+
+    dateDelta = 3
+    if delta.days <= dateDelta:
+        return True
+    else: return False
 
 
 def replace_parentheses(string):
@@ -26,15 +39,16 @@ def downloadTor(url, name, quality, subers):
 
     for value in resp.iter_content(1024**2):
         r.write(value)
-    #Yprint(resp.text)
     r.close()
     
 
 
 def animeParsing():
-    for count in range(1, 15):
+    count = 0
+    while(True):
         sleep(3)
         url = f"https://nyaa.si/?p={count}"
+        count+=1
 
         response = requests.get(url, headers=header)
 
@@ -46,11 +60,17 @@ def animeParsing():
             torrentFile = base_url + el.find("td", class_="text-center").find("a").get("href")
             match = el.find_all("a", title=True)[-1].text
             match = replace_parentheses(match)
-            yield match, torrentFile
+            td_tags = el.find_all('td', class_='text-center')
+            date_td = [td for td in td_tags if '-' in td.get_text()][0]
+            date = date_td.get_text()
+            yield match, torrentFile, date
             
         
 def array():
-    for match, torrentFile in animeParsing():
+    for match, torrentFile, date in animeParsing():
+
+        if not(delta_date(date)): break
+
         match_subers = re.search(r'\[(.*?)\]', match)
 
         match_nameAnime = re.search(r'\](.*?)\s-', match)
@@ -64,7 +84,7 @@ def array():
 
             subers, nameAnime, episode, quality = match_subers.group(1), match_nameAnime.group(1), match_episode.group(1), match_q.group(1)
             
-            yield subers, nameAnime, episode, quality, torrentFile
+            yield subers, nameAnime, episode, quality, torrentFile, date
         
             for anime in name:
                 if anime in nameAnime:
