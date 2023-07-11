@@ -8,11 +8,21 @@ from time import sleep
 header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/99.0.0.0"}
 base_url = "https://nyaa.si"
 
+way = "D:\\Videos\\One Piece\\"
 
-def downloadTor(url, fullname):
-    resp = requests.get(url=url, stream=True)
+name = ["One Piece", "Horimiya", "Ayaka"]
 
-    r = open("D:\\Videos\\One Piece\\" + fullname + '.torrent', "wb")
+
+def replace_parentheses(string):
+    replaced_string = re.sub(r'\(', '[', string)
+    replaced_string = re.sub(r'\)', ']', replaced_string)
+    return replaced_string
+
+
+def downloadTor(url, name, quality, subers):
+    resp = requests.get(url=url, headers=header)
+
+    r = open(way + name + f'[{quality}]' + f'[{subers}]' + '.torrent', "wb")
 
     for value in resp.iter_content(1024**2):
         r.write(value)
@@ -22,19 +32,20 @@ def downloadTor(url, fullname):
 
 
 def animeParsing():
-    for count in range(1, 6):
+    for count in range(1, 15):
         sleep(3)
-        base_url = f"https://nyaa.si/?p={count}"
+        url = f"https://nyaa.si/?p={count}"
 
-        response = requests.get(base_url, headers=header)
+        response = requests.get(url, headers=header)
 
         soup = BS(response.text, "lxml")
 
         data = soup.find_all("tr", class_="success")
 
         for el in data: 
-            torrentFile = base_url + el.find_all("td")[1].find_next("a").get("href")
-            match = el.find_all("td")[1].find_next("a").text
+            torrentFile = base_url + el.find("td", class_="text-center").find("a").get("href")
+            match = el.find_all("a", title=True)[-1].text
+            match = replace_parentheses(match)
             yield match, torrentFile
             
         
@@ -55,14 +66,15 @@ def array():
             
             yield subers, nameAnime, episode, quality, torrentFile
         
-            if "One" in nameAnime and  "Piece" in nameAnime:
+            for anime in name:
+                if anime in nameAnime:
                 
-                print(" Сабы: {}\n Название: {}\n Номер эпизода: {}\n Качество: {}\n Ссылка {}\n".format(subers, nameAnime, episode, quality, torrentFile), '\n\n')
-                if '1080p' in quality :
-                    print("Номер эпизода " + episode + '\n' + "Хотите скачать данный эпизод? [Y/N]")
-                    answer = input()
-                    if answer == 'Y':
-                        downloadTor(torrentFile, match)
-                    else: print('\n' + 'Continue...' + '\n')
+                    print(" Сабы: {}\n Название: {}\n Номер эпизода: {}\n Качество: {}\n Ссылка {}\n".format(subers, nameAnime, episode, quality, torrentFile), '\n\n')
+                    if ('1080p' in quality):
+                        print(nameAnime + '\n' + "Номер эпизода " + episode + '\n' + subers + '\n' + "Хотите скачать данный эпизод? [Y/N]")
+                        answer = input()
+                        if answer == 'Y':
+                            downloadTor(torrentFile, nameAnime, quality, subers)
+                        else: print('\n' + 'Continue...' + '\n')
 
 
