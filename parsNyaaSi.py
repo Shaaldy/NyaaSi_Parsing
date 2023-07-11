@@ -6,11 +6,17 @@ from time import sleep
 
 
 
-header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/99.0.0.0"}
+header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/99.0.0.0"
+          }
+    #Напишите свой header. Как это сделать: зайдите на любой сайт -> код элемента -> Сети (Network).
+    #Потыкайте на какие-то кнопки сайта для триггера
+    #Далее нажмите на название любое и снизу справа должен появиться User-Agent, его то и копируем
 base_url = "https://nyaa.si"
 way = "D:\\Videos\\One Piece"
 
-name = ["One Piece", "Horimiya", "Ayaka"]
+#указываем свой путь на скачивание
+
+name = ["One Piece", "Horimiya", "Ayaka"] #сюда вписываем название аниме
 
 date_today = datetime.datetime.now()
 
