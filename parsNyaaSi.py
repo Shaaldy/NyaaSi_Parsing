@@ -12,7 +12,7 @@ header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/5
     #Потыкайте на какие-то кнопки сайта для триггера
     #Далее нажмите на название любое и снизу справа должен появиться User-Agent, его то и копируем
 base_url = "https://nyaa.si"
-way = "D:\\Videos\\One Piece"
+way = "D:\\Videos\\One Piece\\"
 
 #указываем свой путь на скачивание
 
